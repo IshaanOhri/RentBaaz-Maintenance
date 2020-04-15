@@ -7,7 +7,12 @@ export const error: ErrorCode = {
     invalidMobileNumber : 'invalidMobileNumber',
     invalidPassword : 'invalidPassword',
     emailTaken : 'emailTaken',
-    userNotFound : 'userNotFound'
+    userNotFound : 'userNotFound',
+    wrongParameters : 'wrongParameters',
+    Unauthorized : 'Unauthorized',
+    wrongPswd : 'Error',
+    invalidVerification : 'invalidVerification',
+    verificationExpired : 'verificationExpired'
 }
 
 export const message: ErrorMessage = {
@@ -16,5 +21,10 @@ export const message: ErrorMessage = {
     invalidMobileNumber : 'Please enter a valid mobile number.',
     invalidPassword : 'Invalid password. Password must contain', //Add Password Rule
     emailTaken : 'An account is already linked to this email.',
-    userNotFound : 'User not found.'
+    userNotFound : 'User not found.',
+    wrongParameters: 'An internal error occured. This incident has been reported',
+    Unauthorized : 'Access denied. Please authenticate',
+    wrongPswd : 'An error occured while updating password',
+    invalidVerification : 'Invalid verification link. Please Sign Up.',
+    verificationExpired : 'Verification link has expired, please sign up again.'
 }

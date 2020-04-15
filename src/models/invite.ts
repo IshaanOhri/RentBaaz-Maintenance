@@ -1,12 +1,10 @@
 const mongoose = require('mongoose');
-const validator = require('validator');
 const jwt = require('jsonwebtoken');
 const {compare, hash} = require('bcrypt');
 const {message} = require('../config/errors');
-const {isPasswordValid, isMobileNumberValid} = require('../interface/validators');
-const {Invite} = require('../models/invite');
+const {isEmailValid, isPasswordValid, isMobileNumberValid} = require('../interface/validators');
 
-const userSchema = new mongoose.Schema({
+const inviteSchema = new mongoose.Schema({
     firstName : {
         type : String,
         required : true,
@@ -26,7 +24,7 @@ const userSchema = new mongoose.Schema({
         lowercase : true,
         unique : true,
         validate(value: string): void {
-            if(!validator.isEmail(value)){
+            if(!isEmailValid(value)){
                 throw new Error(message.invalidEmail);
             }
         }
@@ -56,34 +54,34 @@ const userSchema = new mongoose.Schema({
             }
         }
     },
-    group : {
+    token : {
         type : String,
-        required : true,
-        Default : 'user'
+        required : true
+    },
+    tokenExpiry : {
+        type : Number,
+        required : true
     }
 }, {
     timestamps : true
+});
+
+inviteSchema.statics.findInviteByToken = async (token: string) => {
+    const invite = await Invite.findOne({
+        token
+    });
+
+    return invite;
+}
+
+inviteSchema.pre('remove', async function(this: any, next: any){
+    const invite = this;
+    await Invite.findOneAndDelete({
+        token : invite.token 
+    });
+    next();
 })
 
-userSchema.statics.isEmailAvailable = async (email: string) => {
-    const user = await User.findOne({
-        email
-    });
+export const Invite = mongoose.model('Invite', inviteSchema);
 
-    if(user){
-        return false;
-    }
-
-    const invite = await Invite.findOne({
-        email
-    });
-
-    if(!user && !invite){
-        return true;
-    }
-    return false;
-};
-
-
-export const User = mongoose.model('User',userSchema)
 

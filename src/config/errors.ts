@@ -12,7 +12,8 @@ export const error: ErrorCode = {
     Unauthorized : 'Unauthorized',
     wrongPswd : 'Error',
     invalidVerification : 'invalidVerification',
-    verificationExpired : 'verificationExpired'
+    verificationExpired : 'verificationExpired',
+    notFound : 'notFound'
 }
 
 export const message: ErrorMessage = {
@@ -26,5 +27,6 @@ export const message: ErrorMessage = {
     Unauthorized : 'Access denied. Please authenticate',
     wrongPswd : 'An error occured while updating password',
     invalidVerification : 'Invalid verification link. Please Sign Up.',
-    verificationExpired : 'Verification link has expired, please sign up again.'
+    verificationExpired : 'Verification link has expired, please sign up again.',
+    notFound : 'could not find the requested resource'
 }

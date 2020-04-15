@@ -13,7 +13,8 @@ export const error: ErrorCode = {
     wrongPswd : 'Error',
     invalidVerification : 'invalidVerification',
     verificationExpired : 'verificationExpired',
-    notFound : 'notFound'
+    notFound : 'notFound',
+    incorrectPassword : 'incorrectPassword' 
 }
 
 export const message: ErrorMessage = {
@@ -28,5 +29,6 @@ export const message: ErrorMessage = {
     wrongPswd : 'An error occured while updating password',
     invalidVerification : 'Invalid verification link. Please Sign Up.',
     verificationExpired : 'Verification link has expired, please sign up again.',
-    notFound : 'could not find the requested resource'
+    notFound : 'could not find the requested resource',
+    incorrectPassword : 'The entered password is incorrect. Please try again.'
 }

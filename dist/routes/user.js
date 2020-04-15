@@ -14,7 +14,6 @@ const errors_1 = require("../config/errors");
 const user_1 = require("../models/user");
 const auth_1 = require("../middleware/auth");
 const { compare, hash } = require('bcrypt');
-const { v4 } = require('uuid');
 const { sign } = require('jsonwebtoken');
 const router = express_1.Router();
 router.patch('/update', auth_1.auth('*'), (req, res) => __awaiter(void 0, void 0, void 0, function* () {

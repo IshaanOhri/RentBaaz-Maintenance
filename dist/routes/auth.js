@@ -16,7 +16,7 @@ const login_1 = require("../models/login");
 const invite_1 = require("../models/invite");
 const { isEmailValid, isPasswordValid, isMobileNumberValid } = require('../interface/validators');
 const { compare, hash } = require('bcrypt');
-const { v4 } = require('uuid');
+const uniqid = require('crypto-random-string');
 const { sign } = require('jsonwebtoken');
 const nodemailer = require("nodemailer");
 const router = express_1.Router();
@@ -75,7 +75,7 @@ router.post('/signUp', (req, res) => __awaiter(void 0, void 0, void 0, function*
             });
             return;
         }
-        const token = v4();
+        const token = uniqid({ length: 32, type: 'url-safe' });
         const tokenExpiry = Date.now() + (4 * 60 * 60 * 1000);
         const passwordHashed = yield hash(req.body.password, 8);
         const invite = new invite_1.Invite({
@@ -106,6 +106,7 @@ router.post('/signUp', (req, res) => __awaiter(void 0, void 0, void 0, function*
         });
     }
     catch (error) {
+        console.log(error);
         res.status(500).send();
     }
 }));
@@ -143,6 +144,7 @@ router.get('/verify/:token', (req, res) => __awaiter(void 0, void 0, void 0, fun
         });
     }
     catch (error) {
+        console.log(error);
         res.status(500).send();
     }
 }));
@@ -206,12 +208,12 @@ router.post('/login', (req, res) => __awaiter(void 0, void 0, void 0, function* 
         if (!success) {
             return res.send({
                 success: false,
-                error: errors_1.error.invalidPassword,
-                message: errors_1.message.invalidPassword
+                error: errors_1.error.incorrectPassword,
+                message: errors_1.message.incorrectPassword
             });
         }
         //generate refresh token
-        const refreshToken = v4();
+        const refreshToken = uniqid({ length: 32, type: 'url-safe' });
         const timestamp = Date.now();
         const tokenExpiry = timestamp + (3 * 24 * 60 * 60 * 100); //expires in 3 days
         //generate access token

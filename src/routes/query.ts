@@ -9,7 +9,7 @@ const router = Router();
 router.post('/addQuery', auth('*'), async(req, res)=>{
     if(!req.body.productName || !req.body.description){
         return res.send({
-            success : true,
+            success : false,
             error : error.invalidParameters,
             message : message.invalidParameters
         });
@@ -18,11 +18,11 @@ router.post('/addQuery', auth('*'), async(req, res)=>{
         const query = new Query({
             ...req.body,
             owner : req.userId
-        });
+        });        
+        await query.save();
         res.send({
             success : true,
         });
-        await query.save();
     }catch(e){
         res.status(500).send(e);
     }
@@ -79,6 +79,72 @@ router.patch('/updateQuery/:id', auth('*'), async(req, res)=>{
         });
     }catch(e){
         res.status(500).send(e);
+    }
+})
+
+router.post('/getQuery', auth('*',), async(req,res) => {
+    try{
+        const query = await Query.findOne({
+            _id : req.body._id
+        });
+        if(!query){
+            res.status(400).send({
+                success : false,
+                error : error.notFound,
+                message : message.notFound
+            })
+            return;
+        }
+
+        const sendQuery = query.toObject();
+
+        await delete sendQuery.owner;
+        res.send(sendQuery);
+    }catch(error){
+        console.log(error)
+        res.status(500).send();
+    }
+})
+
+router.get('/getQuery', auth('*'), async(req,res) => {
+    try{
+        const user = await User.findOne({
+            _id : req.userId
+        });
+        await user.populate('query').execPopulate();
+        if(user.query.length === 0){
+            res.send({
+                success : false,
+                error : error.notFound,
+                message : message.notFound
+            });
+            return;
+        }
+        res.send(user.query);
+    }catch(error){
+        console.log(error);
+        res.status(500).send();
+    }
+
+})
+
+router.get('/allQueries', auth('admin'), async(req,res) => {
+    try
+    {
+        const query = await Query.find({});
+
+        if(query.length === 0){
+        res.send({
+            success : false,
+            error : error.notFound,
+            message : message.notFound
+        });
+        return;
+        }
+        res.send(query);
+    }catch(error){
+        console.log(error);
+        res.status(500).send();
     }
 })
 

@@ -68,11 +68,15 @@ const userSchema = new mongoose.Schema({
     },
     group: {
         type: String,
-        required: true,
-        Default: 'user'
+        default: 'user'
     }
 }, {
     timestamps: true
+});
+userSchema.virtual('query', {
+    ref: 'Query',
+    localField: '_id',
+    foreignField: 'owner'
 });
 userSchema.statics.isEmailAvailable = (email) => __awaiter(void 0, void 0, void 0, function* () {
     const user = yield exports.User.findOne({

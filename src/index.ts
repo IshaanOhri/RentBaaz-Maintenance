@@ -3,7 +3,7 @@ const uuid = require('uuid')
 require('./database/mongoose')
 const auth = require('./routes/auth')
 const user = require('./routes/user')
-const query = require('./routes/query')
+const query = require('./routes/query') 
 
 const app = express()
 const port = process.env.PORT

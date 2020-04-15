@@ -7,7 +7,7 @@ import {Invite} from '../models/invite';
 
 const {isEmailValid, isPasswordValid, isMobileNumberValid} = require('../interface/validators');
 const {compare, hash} = require('bcrypt');
-const {v4} = require('uuid');
+const uniqid = require('crypto-random-string');
 const {sign} = require('jsonwebtoken');
 const nodemailer = require("nodemailer");
 
@@ -74,7 +74,7 @@ router.post('/signUp', async (req,res) => {
             return;
         }
     
-        const token: string  = v4();
+        const token: string  = uniqid({length: 32, type: 'url-safe'});
         const tokenExpiry: Number = Date.now() + (4 * 60 * 60 * 1000);
         const passwordHashed: string = await hash(req.body.password, 8);
     
@@ -108,6 +108,7 @@ router.post('/signUp', async (req,res) => {
             message : 'Verification mail sent. Please check mail.'
         });
     }catch(error){
+        console.log(error)
         res.status(500).send();
     }
 })
@@ -151,6 +152,7 @@ router.get('/verify/:token', async (req,res) => {
             success : true
         });
     }catch(error){
+        console.log(error)
         res.status(500).send();
     }
     
@@ -219,12 +221,12 @@ router.post('/login', async(req , res)=>{
         if(!success){
             return res.send({
                 success: false,
-                error: error.invalidPassword,
-                message: message.invalidPassword
+                error: error.incorrectPassword,
+                message: message.incorrectPassword
             });
         }
         //generate refresh token
-        const refreshToken = v4();
+        const refreshToken = uniqid({length: 32, type: 'url-safe'});
         const timestamp = Date.now();
         const tokenExpiry = timestamp + (3 * 24 * 60 * 60 * 100);       //expires in 3 days
 

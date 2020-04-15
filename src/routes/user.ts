@@ -5,7 +5,6 @@ import {Login} from '../models/login';
 import {auth} from '../middleware/auth';
 import { userInfo } from 'os';
 const {compare, hash} = require('bcrypt');
-const {v4} = require('uuid');
 const {sign} = require('jsonwebtoken')
 
 const router = Router();
